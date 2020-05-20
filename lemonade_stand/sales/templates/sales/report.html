@@ -8,7 +8,9 @@
 </head>
 <body>
     <h1>Report</h1>
-    {% if Staff %}
+
+    {% if error_message %}<p><strong>{{ error_message }}</strong></p> {% endif %}
+
     <form action="{% url 'sales:report' %}" method="post">
         {% csrf_token %}
             <label for="start_date">Start date</label>
@@ -25,8 +27,7 @@
             </select>
             <input type="submit" value="Submit">
     </form>
-    {% else %}
-        <h2>No Staff available</h2>
+
     {% if obj %}
     <table>
         <tr>

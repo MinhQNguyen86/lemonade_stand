@@ -30,7 +30,7 @@ def submission(request):
         quant = request.POST['quantity']
         date = request.POST['sale_date']
         staff = request.POST['staffs']
-    except:
+    except KeyError:
         return render(request, 'sales/form.html', {
             'error_message': "Please fill in all input fields",
             'Product': Product.objects.all(),
@@ -42,10 +42,13 @@ def submission(request):
         try:
             r = Report.objects.get(staff=staff, date=date)
             r.items.add(prod)
-        except (KeyError, Report.DoesNotExist):
+            r.price = r.price + p
+            r.commission = r.commission + c
+            r.save()
+        except (Report.DoesNotExist):
             Report.objects.create(staff=staff, date=date, items=prod, price=p, commission=c)
         return HttpResponseRedirect(reverse('sales:form'))
-        #return HttpResponseRedirect(reverse('sales:'))
+
 
 def report(request):
     try:
@@ -53,10 +56,12 @@ def report(request):
         end_date = request.POST['end_date']
         staff = request.POST['staffs']
 
-        od = Report.objects.filter(date__gte=start_date).filter(date__lte=end_date).order_by(-start_date)
-        os = od.filter()
+        od = Report.objects.filter(staff=staff).filter(date__gte=start_date).filter(date__lte=end_date).order_by(-start_date)
         return render(request, 'sales/report.html', {
-            'Staff': Staff.objects.all(),
+            'Staff': staff,
             'obj': od,
         })
     except KeyError:
+        return render(request, 'sales/report.html', {
+            'error_message': "Error: Invalid input(s)",
+        })
