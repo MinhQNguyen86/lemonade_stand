@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Data Entry</title>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'sales/style.css' %}">
+</head>
+<body>
+    <h1>Enter sales data</h1>
+
+    {% if error_message %}<p><strong>{{ error_message }}</strong></p> {% endif %}
+
+    {% if Product and Staff %}
+    <form action="{% url 'sales:submission' %}" method="post">
+        {% csrf_token %}
+            <label for="products">Choose a product:</label>
+            <select id="products" name="products">
+                {% for p in Product.objects.all %}
+                <option value="{{ p.id }}">{{ p.name }}</option>
+                {% endfor %}
+            </select>
+
+            <label for="quantity">Quantity</label>
+            <input type="number" id="quantity" name="quantity" min="1" value="1">
+
+            <label for="sale_date">Date of sale</label>
+            <input type="date" id="sale_date" name="sale_date" placeholder="mm-dd-yyyy">
+
+            <label for="staffs">Choose a salesperson:</label>
+            <select id="staffs" name="staffs">
+                {% for s in Staff.objects.all %}
+                <option value="{{ s.id }}">{{ s.name }}</option>
+                {% endfor %}
+            </select>
+
+            <input type="submit" value="Submit">
+    </form>
+    {% else %}
+        <h2>No Products and/or Staff available</h2>
+    {% endif %}
+
+</body>
+</html>

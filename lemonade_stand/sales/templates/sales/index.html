@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Home</title>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'sales/style.css' %}">
+</head>
+<body>
+    {% if staff_list %}
+        <h2>Sales Staff</h2>
+        <ul style="list-style-type:none;">
+            {% for s in staff_list %}
+            <li>{{ s }}</li>
+            {% endfor %}
+        </ul>
+
+        <a href="{% url 'sales:form' %}">Go to forms</a>
+    {% else %}
+        <p>No staff at this location.</p>
+    {% endif %}
+
+</body>
+</html>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Report</title>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'sales/style.css' %}">
+</head>
+<body>
+    <h1>Report</h1>
+    {% if Staff %}
+    <form action="{% url 'sales:report' %}" method="post">
+        {% csrf_token %}
+            <label for="start_date">Start date</label>
+            <input type="date" id="start_date" name="start_date" placeholder="mm-dd-yyyy">
+
+            <label for="end_date">End date</label>
+            <input type="date" id="end_date" name="end_date" placeholder="mm-dd-yyyy">
+
+            <label for="staffs">Choose a salesperson:</label>
+            <select id="staffs" name="staffs">
+                {% for s in Staff.objects.all %}
+                <option value="{{ s.id }}">{{ s.name }}</option>
+                {% endfor %}
+            </select>
+            <input type="submit" value="Submit">
+    </form>
+    {% else %}
+        <h2>No Staff available</h2>
+    {% if obj %}
+    <table>
+        <tr>
+            <th>Date</th>
+            <th>Items Sold</th>
+            <th>Total Price</th>
+            <th>Commission Earned</th>
+        </tr>
+      <tr>
+          {% for o in obj %}
+          <th>{{ o.date }}</th>
+          {% endfor %}
+      </tr>
+      <tr>
+          {% for o in obj %}
+          <th>{{ o.items }}</th>
+          {% endfor %}
+      </tr>
+      <tr>
+          {% for o in obj %}
+          <th>{{ o.price }}</th>
+          {% endfor %}
+      </tr>
+      <tr>
+          {% for o in obj %}
+          <th>{{ o.commission }}</th>
+          {% endfor %}
+      </tr>
+    </table>
+    {% endif %}
+</body>
+</html>
