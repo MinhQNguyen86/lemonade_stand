@@ -25,6 +25,7 @@ def form(request):
 
 
 def submission(request):
+    # CR: why not using ModelForm? could save you lots of redundant code
     try:
         prod = request.POST['products']
         quant = request.POST['quantity']
@@ -37,6 +38,8 @@ def submission(request):
             'Staff': Staff.objects.all(),
         })
     else:
+        # CR: prod is not an object yet - you need to retrieve it from the DB first.
+        # Again, ModelForm does that for you...
         p = quant * prod.price
         c = staff.commission * p
         try:
@@ -52,6 +55,7 @@ def submission(request):
 
 def report(request):
     try:
+        # CR: Use forms!
         start_date = request.POST['start_date']
         end_date = request.POST['end_date']
         staff = request.POST['staffs']
